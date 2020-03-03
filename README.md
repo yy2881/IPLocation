@@ -17,7 +17,7 @@ Copy the command line
 1. Sign in to mongoDB Atlas and build a new cluster
 2. Click CONNECT
 3. Add current IP address to whitelist and create a mongoDB user
-4. Replace the `mongoose.connect(mongodb+srv://admin:Abc123@cluster0-1tctl.mongodb.net/test?retryWrites=true&w=majority)` in app.js with the given connection uri including your *username* and *password*.
+4. Replace the `mongoose.connect(mongodb+srv://admin:Abc123@cluster0-1tctl.mongodb.net/test?retryWrites=true&w=majority)` in app.js with the given connection uri, make sure to replace the username and password
 
 ### Step 4 Run application
 
