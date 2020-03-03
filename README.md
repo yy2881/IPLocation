@@ -3,7 +3,7 @@ A web service application implemented by node.js, express.js and the fetch API.
 
 ### Download this repository and run command line
 
-`git clone https://github.com/Sean-Bradley/AWS-SNS-SMS-with-NodeJS.git`
+`git clone https://github.com/yy2881/IPLocation.git`
 
 `$ cd iplocation`
 
