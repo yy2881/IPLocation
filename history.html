@@ -232,7 +232,6 @@
       var endDay = document.getElementById('endday').value;
       let startTime = Date.parse(startMonth + " " + startDay + " " + startYear);
       let endTime = Date.parse(endMonth + " " + endDay + " " + endYear);
-      console.log(startTime);
       var url = "/dateRangeWithin?start=" + startTime + "&" + "end=" + endTime;
       fetchRecords(url);
     }
