@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <style>
+    #map {
+      height: 400px;
+      width: 100%;
+    }
+
+    #history {
+      padding-left: 15px;
+      margin-top: -15px;
+      margin-bottom: 10px;
+    }
+
+    #getbtn {
+      margin: 10px;
+    }
+
+    #sms {
+      margin-top: -15px;
+      margin-left: 30px;
+      margin-bottom: 10px;
+    }
+  </style>
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+  <title>IP Location Search and Query Application</title>
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-2"></div>
+      <div class="col-lg-8">
+        <h3>Search IP's geolocation</h3>
+        <p>You can also try:</p>
+        <div class="row">
+          <a href="#" id="history" class="stretched-link">Query history records</a>
+          <a href="#" id="sms" class="stretched-link">Send the geolocation info of an IP address</a>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-2"></div>
+      <div class="col-lg-8">
+        <div class="form-group">
+          <input type="text" class="form-control" id="userInput" placeholder="Enter an IP address">
+          <button class="btn btn-primary btm-sm" id='getbtn'>Get Location</button>
+        </div>
+      </div>
+      <div class="col-lg-2"></div>
+    </div>
+    <div class="row">
+      <div class="col-lg-2"></div>
+      <div class="col-lg-8">
+        <ul class="list-group" id="display">
+          <p id="showposition"></p>
+          <br>
+          <div id="map"></div>
+        </ul>
+      </div>
+      <div class="col-lg-2"></div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('getbtn').addEventListener('click', getLocations);
+    document.getElementById('history').addEventListener('click', getHistory);
+    document.getElementById('sms').addEventListener('click', sendSMS);
+
+    var posObject;
+
+    //go to query page
+    function getHistory() {
+      window.location = 'history'
+    }
+
+    //go to sendSMS page
+    function sendSMS() {
+      window.location = 'sms'
+    }
+
+    //according to given ip address, call the external api to get geolocation information,then display on map and store into mongodb
+    function getLocations() {
+      let ip = document.getElementById('userInput').value;
+      let access_key = "3514165d0e4e2953dfefd8fe5f90edd0";
+      var url = 'http://api.ipstack.com/' + ip + '?access_key=' + access_key;
+
+      console.log(url);
+      fetch(url, {
+          'Content-type': 'application/json'
+        })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          document.getElementById('showposition').innerHTML = "This IP is from " + data.region_name + ", " + data.city;
+          initMap(data.latitude, data.longitude);
+          posObject = storePos(data.latitude, data.longitude, data.city, data.region_name);
+          storeNewRecord(posObject);
+          console.log("success");
+        })
+    }
+
+
+    //Map: googlemap initialization based on latitude and longitude gained from external api
+    function initMap(latitude, longitude) {
+      var pos = {
+        lat: latitude,
+        lng: longitude
+      };
+      var map = new google.maps.Map(
+        document.getElementById('map'), {
+          zoom: 4,
+          center: pos
+        });
+      var marker = new google.maps.Marker({
+        position: pos,
+        map: map
+      });
+    }
+
+
+    //store geolocation information into an object
+    function storePos(lat, lon, city, country) {
+      return {
+        lat: lat,
+        lon: lon,
+        city: city,
+        country: country
+      }
+    }
+
+    //save geolocation information into mongodb
+    function storeNewRecord(posObject) {
+
+      console.log(posObject);
+      fetch('/', {
+        method: 'POST',
+        body: JSON.stringify({
+          ip: document.getElementById("userInput").value,
+          createdDate: Date.parse(new Date()),
+          latitude: posObject.lat,
+          longitude: posObject.lon,
+          city: posObject.country + "," + posObject.city
+        }),
+        headers: {
+          "Content-Type": "application/json; charset=utf-8"
+        }
+      }).then((response) => {
+        return response.json();
+      }).then((data) => {
+        alert("New IP Record saved!");
+      });
+    }
+  </script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBQ8jbf9VclqZNNUu2VOFuexMPCxN8y5rU&callback=initMap">
+  </script>
+</body>
+
+</html>
