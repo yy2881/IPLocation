@@ -7,7 +7,9 @@ Download Node.js, npm at https://www.npmjs.com/get-npm
 ### Step 2 Clone
 Copy the command line
 `git clone https://github.com/yy2881/IPLocation.git`
+
 `$ cd iplocation`
+
 `$ npm install`
 
 ### Step 3 Config MongoDB connection
