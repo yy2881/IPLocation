@@ -1,5 +1,5 @@
-# IP Location Search & Query & SMS with NodeJS
-A web service application implemented by node.js, express.js and the fetch API.
+# IP Location Search & Query & SMS with NodeJS and MongoDB
+A web service application implemented by node.js, express.js, mongoose and the fetch API.
 
 ### Download this repository and run command line
 
