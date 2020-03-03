@@ -10,9 +10,14 @@ var AWS = require('aws-sdk');
 
 
 //connect to database and create the model
-mongoose.connect("mongodb+srv://user:Abc123@cluster0-1tctl.mongodb.net/test?retryWrites=true&w=majority", err => {
-  console.log("database connected!");
-});
+//!!replace the uri with your cluster connection uri given by MongoDB Atlas, remember to replace <username> and <password>
+mongoose.connect("mongodb+srv://admin:Abc123@cluster0-1tctl.mongodb.net/test?retryWrites=true&w=majority",
+  {useNewUrlParser: true});
+const connect = mongoose.connection;
+connect.on('err', console.error.bind(console, 'connection error:'));
+connect.once('open',()=> {
+  console.log("Connect to MongoDB");
+})
 require("./record");
 const Record = mongoose.model("Record");
 
